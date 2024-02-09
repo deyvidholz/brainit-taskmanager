@@ -62,6 +62,9 @@ export class UserService extends BaseService {
     });
 
     const decodedToken = jwt.decode(token) as jwt.JwtPayload;
-    return { accessToken: token, expiration: Number(decodedToken.exp) };
+    return {
+      accessToken: `Bearer ${token}`,
+      expiration: Number(decodedToken.exp),
+    };
   }
 }

@@ -9,8 +9,9 @@ import {
 } from '../../../core/decorators/controller';
 import { BaseController } from '../../global/base-controller';
 import { TaskService } from './task.service';
+import { isAuthenticated } from '../user/user.middlewares';
 
-@Controller('/tasks')
+@Controller('/tasks', { middlewares: [isAuthenticated] })
 export default class TaskController extends BaseController {
   protected service: TaskService = new TaskService();
 

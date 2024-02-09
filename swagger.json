@@ -1,0 +1,455 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "BrainIT Task Manager - Swagger API Doc",
+    "version": "1.0.0",
+    "title": "BrainIT Task Manager",
+    "contact": {
+      "email": "deyvidholzt@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "schemes": ["http"],
+  "host": "localhost:3222",
+  "basePath": "/",
+  "securityDefinitions": {
+    "BearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Enter your JWT Bearer token in the format 'Bearer <token>'"
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/users/auth": {
+      "post": {
+        "summary": "Authenticate",
+        "description": "Authenticate using credentials",
+        "tags": ["users"],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/AuthUserResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          }
+        }
+      }
+    },
+
+    "/users": {
+      "post": {
+        "summary": "Create user",
+        "description": "Create user",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["users"],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+
+    "/tasks": {
+      "get": {
+        "summary": "Get all the tasks",
+        "description": "Get all the tasks with pagination",
+        "produces": ["application/json"],
+        "tags": ["tasks"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/GetTasksResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          }
+        }
+      },
+
+      "post": {
+        "summary": "Create task",
+        "description": "Create a task",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["tasks"],
+        "parameters": [
+          {
+            "name": "task",
+            "in": "body",
+            "description": "Task object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TaskInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/Task"
+            }
+          },
+          "401": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/Unauthorized"
+            }
+          }
+        }
+      }
+    },
+
+    "/tasks/{id}": {
+      "get": {
+        "summary": "Get task",
+        "description": "Get specific task",
+        "produces": ["application/json"],
+        "tags": ["tasks"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the task",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/Task"
+            }
+          },
+          "404": {
+            "description": "Task not found",
+            "schema": {
+              "$ref": "#/definitions/ResourceNotFound"
+            }
+          }
+        }
+      },
+
+      "put": {
+        "summary": "Update task",
+        "description": "Update specific task",
+        "produces": ["application/json"],
+        "tags": ["tasks"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the task",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "task",
+            "in": "body",
+            "description": "Task object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TaskInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/Task"
+            }
+          },
+          "404": {
+            "description": "Task not found",
+            "schema": {
+              "$ref": "#/definitions/ResourceNotFound"
+            }
+          }
+        }
+      },
+
+      "patch": {
+        "summary": "Set task as finished",
+        "description": "Set task as finished",
+        "produces": ["application/json"],
+        "tags": ["tasks"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the task",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/FinishedTask"
+            }
+          },
+          "404": {
+            "description": "Task not found",
+            "schema": {
+              "$ref": "#/definitions/ResourceNotFound"
+            }
+          }
+        }
+      },
+
+      "delete": {
+        "summary": "Delete task",
+        "description": "Delete task",
+        "produces": ["application/json"],
+        "tags": ["tasks"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the task",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          },
+          "404": {
+            "description": "Task not found",
+            "schema": {
+              "$ref": "#/definitions/ResourceNotFound"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "GetTasksResponse": {
+      "type": "object",
+      "properties": {
+        "itemsPerPage": {
+          "type": "integer",
+          "example": 10
+        },
+        "page": {
+          "type": "integer",
+          "example": 1
+        },
+        "totalPages": {
+          "type": "integer",
+          "example": 5
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Task"
+          }
+        }
+      }
+    },
+
+    "Task": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "a198fc11-1735-4537-9f1b-595b014765af"
+        },
+        "isFinished": {
+          "type": "boolean",
+          "example": false
+        },
+        "title": {
+          "type": "string",
+          "example": "My Awesome Task"
+        },
+        "description": {
+          "type": "string",
+          "example": "Study JavaScript Promises"
+        },
+        "createdAt": {
+          "type": "string",
+          "example": "2024-02-09T16:49:19.830Z"
+        },
+        "updatedAt": {
+          "type": "string",
+          "example": "2024-02-09T16:49:19.830Z"
+        }
+      }
+    },
+
+    "FinishedTask": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "a198fc11-1735-4537-9f1b-595b014765af"
+        },
+        "isFinished": {
+          "type": "boolean",
+          "example": true
+        },
+        "title": {
+          "type": "string",
+          "example": "My Awesome Task"
+        },
+        "description": {
+          "type": "string",
+          "example": "Study JavaScript Promises"
+        },
+        "createdAt": {
+          "type": "string",
+          "example": "2024-02-09T16:49:19.830Z"
+        },
+        "updatedAt": {
+          "type": "string",
+          "example": "2024-02-09T16:49:19.830Z"
+        }
+      }
+    },
+
+    "TaskInput": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "example": "My Awesome Task"
+        },
+        "description": {
+          "type": "string",
+          "example": "Study JavaScript Promises"
+        }
+      }
+    },
+
+    "UserInput": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "example": "deyvidholz"
+        },
+        "password": {
+          "type": "string",
+          "example": "mostDifficultPasswordEver123"
+        }
+      }
+    },
+
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "a198fc11-1735-4537-9f1b-595b014765af"
+        },
+        "username": {
+          "type": "string",
+          "example": "deyvidholz"
+        }
+      }
+    },
+
+    "AuthUserResponse": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string",
+          "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZjMzU2ZjE1LTM5MGUtNGNiNy05ZDFkLTEzM2RhODM5NzA1ZCIsImlhdCI6MTcwNzQ5MDUxNSwiZXhwIjoxNzA3NDk0MTE1fQ.UCxM1QhliCcomIt9i-8ii0MYoaEIQujn5QhvQZ3xIVs"
+        },
+        "expiration": {
+          "type": "integer",
+          "example": 1707494115
+        }
+      }
+    },
+
+    "InvalidResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "message": {
+          "type": "string",
+          "example": "An error occurred"
+        }
+      }
+    },
+
+    "ResourceNotFound": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "message": {
+          "type": "string",
+          "example": "Resource not found"
+        }
+      }
+    },
+
+    "Unauthorized": {
+      "type": "string",
+      "example": "Unauthorized"
+    }
+  }
+}

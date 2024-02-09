@@ -8,6 +8,8 @@ import corsConfig from './configs/cors.config';
 import cookieParser from 'cookie-parser';
 import dataSource from './connection';
 import { runInit } from '../core/functions/run-init';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from '../swagger.json';
 
 dataSource.initialize().then(() => console.log('Database connected'));
 
@@ -36,6 +38,8 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // Registering controllers
 registerControllers(app);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Setting up 404 handler
 app.use('*', function (req: Request, res: Response) {
