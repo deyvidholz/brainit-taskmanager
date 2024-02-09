@@ -11,6 +11,7 @@ export abstract class BaseController {
       return param.res.status(param.successStatus || 200).json(response);
     } catch (error: any) {
       const errorClassName = error?.constructor?.name;
+      if (process.env.DEBUG_ERRORS === 'true') console.log(error);
 
       if (errorClassName && exceptionHandlersConfig.parser[errorClassName]) {
         exceptionHandlersConfig.parser[errorClassName](error);

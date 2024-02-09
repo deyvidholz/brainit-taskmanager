@@ -4,6 +4,7 @@ import {
 } from '../../core/functions/helpers';
 import { Repository } from 'typeorm';
 import { ResourceNotFoundException } from './exceptions/resource-not-found.exception';
+import paginationConfig from '../../src/configs/pagination.config';
 
 export class BaseService {
   protected repository: Repository<any>;
@@ -20,7 +21,16 @@ export class BaseService {
 
   async find(options?: FindParam) {
     const paginateOptions = getPaginationObject(options);
-    return this.repository.find(paginateOptions);
+    const [items, qty] = await this.repository.findAndCount(paginateOptions);
+    const totalPages = Math.ceil(
+      qty / (options?.itemsPerPage || paginationConfig.defaultItemsPerPage)
+    );
+
+    return {
+      ...options,
+      totalPages,
+      items,
+    };
   }
 
   async create(payload: CreateParam) {
@@ -28,7 +38,8 @@ export class BaseService {
   }
 
   async update(id: string, payload: UpdateParam) {
-    return this.repository.update(id, payload);
+    await this.repository.update(id, payload);
+    return this.repository.findOne({ where: { id } });
   }
 
   async delete(id: string) {

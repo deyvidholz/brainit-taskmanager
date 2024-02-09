@@ -1,3 +1,4 @@
+import paginationConfig from '../../src/configs/pagination.config';
 import { FindManyOptions } from 'typeorm';
 
 export const isInDistDirectory = (): boolean => {
@@ -33,7 +34,7 @@ export const getPaginationObject = (
   }
 
   if (!options.itemsPerPage || Number.isNaN(options.itemsPerPage)) {
-    options.itemsPerPage = 50;
+    options.itemsPerPage = paginationConfig.defaultItemsPerPage;
   }
 
   return {
